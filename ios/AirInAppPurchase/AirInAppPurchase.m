@@ -358,8 +358,10 @@ DEFINE_ANE_FUNCTION(removePurchaseFromQueue)
                 break;
             case SKPaymentTransactionStatePurchasing:
                 FREDispatchStatusEventAsync(context, (uint8_t*)"DEBUG", (uint8_t*) [@"SKPaymentTransactionStatePurchasing" UTF8String]);
+                break;
             case SKPaymentTransactionStateRestored:
                 FREDispatchStatusEventAsync(context, (uint8_t*)"DEBUG", (uint8_t*) [@"SKPaymentTransactionStateRestored" UTF8String]);
+                break;
             default:
                 FREDispatchStatusEventAsync(context, (uint8_t*)"DEBUG", (uint8_t*) [@"Unknown Reason" UTF8String]);
                 break;
