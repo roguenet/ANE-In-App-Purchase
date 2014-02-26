@@ -174,12 +174,8 @@ void *AirInAppRefToSelf;
     // transaction restored
     // dispatch event
     FREDispatchStatusEventAsync(AirInAppCtx, (uint8_t*)"TRANSACTION_RESTORED", (uint8_t*)             
-                                [[[transaction error] localizedDescription] UTF8String]
+                                [[[transaction payment] productIdentifier] UTF8String]
                                 ); 
-    
-    
-    // conclude the transaction
-    [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
 }
 
 
@@ -215,13 +211,14 @@ void *AirInAppRefToSelf;
 // restoring transaction is done.
 - (void)paymentQueueRestoreCompletedTransactionsFinished:(SKPaymentQueue *)queue
 {
-    FREDispatchStatusEventAsync(AirInAppCtx, (uint8_t*)"DEBUG", (uint8_t*) [@"restoreCompletedTransactions" UTF8String] ); 
+    FREDispatchStatusEventAsync(AirInAppCtx, (uint8_t*)"TRANSACTION_RESTORE_FINISHED", (uint8_t*) [@"restoreCompletedTransactions" UTF8String] );
 }
 
 // restoring transaction failed.
 - (void)paymentQueue:(SKPaymentQueue *)queue restoreCompletedTransactionsFailedWithError:(NSError *)error
 {
-    FREDispatchStatusEventAsync(AirInAppCtx, (uint8_t*)"DEBUG", (uint8_t*) [@"restoreFailed" UTF8String] ); 
+    FREDispatchStatusEventAsync(AirInAppCtx, (uint8_t*)"TRANSACTION_RESTORE_FAILED", (uint8_t*)
+                                [[error localizedDescription] UTF8String] );
 }
 
 // transaction has been removed.
@@ -327,6 +324,14 @@ DEFINE_ANE_FUNCTION(getProductsInfo)
     return nil;
 }
 
+// restore transactions
+DEFINE_ANE_FUNCTION(restoreTransactions)
+{
+    [[SKPaymentQueue defaultQueue] restoreCompletedTransactions];
+    
+    return nil;
+}
+
 // remove purchase from queue.
 DEFINE_ANE_FUNCTION(removePurchaseFromQueue)
 {
@@ -390,7 +395,7 @@ void AirInAppContextInitializer(void* extData, const uint8_t* ctxType, FREContex
                              uint32_t* numFunctionsToTest, const FRENamedFunction** functionsToSet) 
 {    
     // Register the links btwn AS3 and ObjC. (dont forget to modify the nbFuntionsToLink integer if you are adding/removing functions)
-    NSInteger nbFuntionsToLink = 5;
+    NSInteger nbFuntionsToLink = 6;
     *numFunctionsToTest = nbFuntionsToLink;
     
     FRENamedFunction* func = (FRENamedFunction*) malloc(sizeof(FRENamedFunction) * nbFuntionsToLink);
@@ -414,6 +419,10 @@ void AirInAppContextInitializer(void* extData, const uint8_t* ctxType, FREContex
     func[4].name = (const uint8_t*) "removePurchaseFromQueue";
     func[4].functionData = NULL;
     func[4].function = &removePurchaseFromQueue;
+    
+    func[5].name = (const uint8_t*) "restoreTransactions";
+    func[5].functionData = NULL;
+    func[5].function = &restoreTransactions;
     
     *functionsToSet = func;
     
