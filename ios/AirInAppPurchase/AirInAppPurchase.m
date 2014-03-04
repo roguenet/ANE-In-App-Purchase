@@ -372,7 +372,9 @@ DEFINE_ANE_FUNCTION(removePurchaseFromQueue)
                 break;
         }
 
-        if ([transaction transactionState] == SKPaymentTransactionStatePurchased && [[[transaction payment] productIdentifier] isEqualToString:productIdentifier])
+        if (([transaction transactionState] == SKPaymentTransactionStatePurchased
+            || [transaction transactionState] == SKPaymentTransactionStateRestored)
+             && [[[transaction payment] productIdentifier] isEqualToString:productIdentifier])
         {
             // conclude the transaction
             [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
