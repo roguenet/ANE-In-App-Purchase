@@ -201,6 +201,10 @@
 		BFA8AB111527AFB700845071 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					armv7,
+					armv7s,
+				);
 				DSTROOT = /tmp/AirInAppPurchase.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AirInAppPurchase/AirInAppPurchase-Prefix.pch";
@@ -215,6 +219,10 @@
 		BFA8AB121527AFB700845071 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = (
+					armv7,
+					armv7s,
+				);
 				DSTROOT = /tmp/AirInAppPurchase.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "AirInAppPurchase/AirInAppPurchase-Prefix.pch";
